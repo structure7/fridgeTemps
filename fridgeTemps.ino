@@ -38,25 +38,32 @@ void loop()
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(3, 9);
-  display.println("  Fridge:  Freezer:");
+  display.setCursor(0, 9);
+  display.println("  Freezer:  Refrig:");
   display.setTextSize(3);
   display.setTextColor(WHITE);
-  display.setCursor(0, 23);
-  if (tempFreezer < 0 || tempFreezer > 9)
+  if (tempFreezer < -9) // If temp is 3-char
   {
-    display.print(" ");
-    display.print(tempFridge);
-    display.print(" ");
+    display.setCursor(8, 23);
     display.print(tempFreezer);
   }
-  else
+  else if (tempFreezer > -10 && tempFreezer < 0) // If temp is 2-char (negative temp)
   {
-    display.print(" ");
-    display.print(tempFridge);
-    display.print("  ");
+    display.setCursor(18, 23);
     display.print(tempFreezer);
   }
+  else if (tempFreezer > 0 && tempFreezer < 10) // If temp is 1-char
+  {
+    display.setCursor(27, 23);
+    display.print(tempFreezer);
+  }
+  else // If temp is 2-char #2
+  {
+    display.setCursor(18, 23);
+    display.print(tempFreezer);
+  }
+  display.setCursor(75, 23);
+  display.print(tempFridge);
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 50);
