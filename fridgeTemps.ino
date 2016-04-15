@@ -1,9 +1,9 @@
-#include <SPI.h>
-#include <Wire.h>
+#include <Wire.h> // From ESP8266 library
+#include <SPI.h> // From ESP8266 library
+
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-
-#define OLED_RESET 4
+#define OLED_RESET 0
 Adafruit_SSD1306 display(OLED_RESET);
 
 #define NUMFLAKES 10
@@ -13,7 +13,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#define ONE_WIRE_BUS 8
+#define ONE_WIRE_BUS 12 // NodeMCU D6, ESP-12E GPIO12 (WORKS!)
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -23,6 +23,7 @@ DeviceAddress ds18b20Freezer = { 0x28, 0xBE, 0x89, 0x1E, 0x00, 0x00, 0x80, 0x93 
 
 void setup()
 {
+  Wire.begin(4, 5); // Set pins for SDA/SCL (4=D2 for SDA and 5=D1 for SCL)
   sensors.begin();
   sensors.setResolution(ds18b20Fridge, 9);
   sensors.setResolution(ds18b20Freezer, 9);
