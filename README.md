@@ -11,8 +11,10 @@ Sending temperatures with two DS18B20s. On an Arduno Uno for now... looking at E
 Title | Include | Link | w/ IDE?
 ------|---------|------|----------
 Adafruit_SSD1306 | Adafruit_SSD1306.h | https://github.com/adafruit/Adafruit_SSD1306 | No
-Wire | Wire.h | n/a | Yes
+Adafruit-GFX-Library | Adafruit_GFX.h | https://github.com/adafruit/Adafruit-GFX-Library | No
+esp8266/Arduino | Wire.h | https://github.com/esp8266/Arduino | NO!‡
 OneWire | OneWire.h | https://github.com/PaulStoffregen/OneWire | No
 Arduino-Temperature-Control-Library | DallasTemperature.h | https://github.com/milesburton/Arduino-Temperature-Control-Library | No
+‡See lessons learned below.
 
 Many thanks to all of the people above. [How to edit this.](https://guides.github.com/features/mastering-markdown/)
