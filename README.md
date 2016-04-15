@@ -12,7 +12,8 @@ Title | Include | Link | w/ IDE?
 ------|---------|------|----------
 Adafruit_SSD1306 | Adafruit_SSD1306.h | https://github.com/adafruit/Adafruit_SSD1306 | No
 Adafruit-GFX-Library | Adafruit_GFX.h | https://github.com/adafruit/Adafruit-GFX-Library | No
-esp8266/Arduino | Wire.h | https://github.com/esp8266/Arduino | NO!‡
+Wire | Wire.h | https://github.com/esp8266/Arduino | NO!‡
+SPI | SPI.h | https://github.com/esp8266/Arduino | NO!‡
 OneWire | OneWire.h | https://github.com/PaulStoffregen/OneWire | No
 Arduino-Temperature-Control-Library | DallasTemperature.h | https://github.com/milesburton/Arduino-Temperature-Control-Library | No
 ‡See lessons learned below.
