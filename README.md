@@ -43,10 +43,10 @@ So get this: `Wire.begin(4, 5);` wouldn't compile... said it didn't exist in Wir
 
 But the OLED still didn't. I just needed to learn to read.
 
-I was hell-bent (especially after seeing other peoples' glowing, pride-filled examples) to make the "stock" Adafruit library work with this OLED on my ESP-12E. After not too much more cursing I learned lesson #4:
+I was hell-bent (especially after seeing other peoples' glowing, pride-filled examples) to make the "stock" Adafruit library work with this OLED on my ESP-12E. I had started this whole process using Adafruit's example sketch `ssd1306_128x64i2c`. After not too much more cursing I learned lesson #4:
 
 * Change `#define OLED_RESET 4` to `#define OLED_RESET 0`, or some number so it's not the same as whatever SDA/SLC you've picked!
 
-This was just bad luck that the SDA/SLC pins I chose were defined as a reset in Adafruit's library, but after changing it from 4 to 0, the OLED at last lit up on my ESP-12E.
+This was just bad luck that the SDA/SLC pins I chose were defined as a reset in Adafruit's example sketch, but after changing it from 4 to 0, the OLED at last lit up on my ESP-12E.
 
-FYI, all of this happened on IDE version 1.6.5.
+FYI, all of this happened on Arduino IDE version 1.6.5.
