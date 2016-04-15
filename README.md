@@ -23,7 +23,7 @@ Many thanks to all of the people above. [How to edit this.](https://guides.githu
 ## Lessons Learned
 ###NodeMCU's ESP-12E versus the I2C OLED (w/ Arduino... no Lua)
 <p align="center">
-![ScreenShot](http://i.imgur.com/jLLg0gr.jpg)</p>
+![ScreenShot](http://i.imgur.com/jLLg0gr.jpg)<img src="http://i.imgur.com/jLLg0gr.jpg"/></p>
 
 I purchased a pretty plain OLED display (http://www.ebay.com/itm/130566448551) advertised as "I2C 0.96" OLED display module (compatible Arduino)" and further described as "I2C interface 0.96" OLED 128x64 display module." In the eBay listing there was a "source code" link and it mentioned it was tested and 100% compatible with Adafruit's code.
 
