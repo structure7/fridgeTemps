@@ -18,3 +18,6 @@ Arduino-Temperature-Control-Library | DallasTemperature.h | https://github.com/m
 ‡See lessons learned below.
 
 Many thanks to all of the people above. [How to edit this.](https://guides.github.com/features/mastering-markdown/)
+
+## Lessons Learned
+###NodeMCU's ESP-12E versus the I2C OLED
