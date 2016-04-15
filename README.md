@@ -29,7 +29,7 @@ It in fact was! I attached the display to the SDA/SCL pins on my Arduino Uno and
 * Changed the I2C address from 0x3D to 0x3C. Therefore `display.begin(SSD1306_SWITCHCAPVCC, 0x3C);`
 * As notified during my first unsuccessful compile, changed the comment in line 69-70 of Adafruit_SSD1306.h (`#define SSD1306_128_64`) to include my OLED dimensions.
 
-Almost a happy ending. Using the exact same code from the Uno for my ESP-12E, I couldn't get anything to display on the OLED. I then learned that unlike the Uno, the ESP8266 family (of which the NodeMCU/ESP-12E belongs) doesn't have defined SDA/SCL. Therefore, lesson one:
+Almost a happy ending. Using the exact same code from the Uno for my ESP-12E, I couldn't get anything to display on the OLED. I then learned that unlike the Uno, the ESP8266 family (of which the NodeMCU/ESP-12E belongs) doesn't have defined "hardware-defined" SDA/SCL pins. They need to be defined in software. Therefore, lesson one:
 
 * Add `Wire.begin(4, 5);` as my first line in void setup()
 
