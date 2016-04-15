@@ -25,3 +25,6 @@ I purchased a pretty plain OLED display (http://www.ebay.com/itm/130566448551?_t
 
 It in fact was. I attached the display to the SDA/SCL pins on my Arduino Uno and she worked great! That is, after I:
 * Changed the I2C address from 0x3D to 0x3C. Therefore `display.begin(SSD1306_SWITCHCAPVCC, 0x3C);`
+* As notified during my first unsuccessful compile, changed the comment in line 69-70 of Adafruit_SSD1306.h (`#define SSD1306_128_64`) to include my OLED dimensions.
+
+Almost a happy ending.
