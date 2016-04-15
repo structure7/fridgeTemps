@@ -47,3 +47,5 @@ I was hell-bent (especially after seeing other peoples' glowing, pride-filled ex
 * Change `#define OLED_RESET 4` to `#define OLED_RESET 0`, or some number so it's not the same as whatever SDA/SLC you've picked!
 
 This was just bad luck that the SDA/SLC pins I chose were defined as a reset in Adafruit's library, but after changing it from 4 to 0, the OLED at last lit up on my ESP-12E.
+
+FYI, all of this happened on IDE version 1.6.5.
