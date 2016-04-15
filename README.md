@@ -33,9 +33,9 @@ Almost a happy ending. Using the exact same code from the Uno for my ESP-12E, I 
 
 * Add `Wire.begin(4, 5);` as my first line in void setup()
 
-This was a little trick because the ESP-12E pins are massively messed up. To summarize, the ESP8266 chip on the board has GPIOs, but these GPIO numbers don't correspond to the ESP-12E pins. GPIO1 ≠ D1, GPIO5 ≠ D5, and this is true for every GPIO. It's a mix-up. So in my `Wire.begin(4, 5);` 4 is my SDA (that's GPIO4, but pin D1), and 5 is my SCL (that's GPIO5, but pin D2). Lordy.
+This was a little tricky because the pinouts of the actual ESP8266 chip (the GPIO pins) don't correspond to the ESP-12E breakout pins (the D1, D2, D3, etc). For example, GPIO1 ≠ D1, GPIO5 ≠ D5, and this is true for every GPIO. It's a mix-up. Between locating some pinout diagrams that translated this for me, and trial-and-error running the LED blink example on various pins, I figured it out. So in my `Wire.begin(4, 5);` 4 is my SDA (that's GPIO4, but pin D1), and 5 is my SCL (that's GPIO5, but pin D2). Lordy.
 
-Excited to figure this out I compiled and got an error that Wire.begin wasn't a thing in Wire.h. Gah. Lesson #2:
+Excited to have figured this out, I compiled... and... got an error: "Wire.h does not name a type." In other words, `Wire.begin` wasn't something in Wire.h. Gah. Oh but it was. Lesson #2:
 
 * If you're switching between two different "groups" of boards in Arduino IDE's board manager (such as Arduino standard, and ESP8266-family), each one of those might have it's own includes that are named exactly the same, but are actually different.
 
