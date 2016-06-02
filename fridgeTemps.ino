@@ -35,7 +35,7 @@ DeviceAddress ds18b20Freezer = { 0x28, 0xBE, 0x89, 0x1E, 0x00, 0x00, 0x80, 0x93 
 #define fridgeOpto  16 // WeMos pin D0 for fridge
 #define freezeOpto  14 // WeMos pin D5 for freezer
 
-int tempFridge, tempFreezer;
+int tempFridge, tempFreezer, timerLatch, startTime, currentTime;
 
 void setup()
 {
@@ -59,7 +59,7 @@ void setup()
   display.clearDisplay();
 
   timer.setInterval(2000L, sendTemps); // Temperature sensor polling interval
-  timer.setInterval(1000L, fridgeDoorStatus);
+  fridgeDoorStatus1();
 
   statusBlinkOn();
 }
@@ -70,7 +70,7 @@ BLYNK_WRITE(V27) // App button to report uptime
 
   if (pinData == 0)
   {
-  timer.setTimeout(8000L, uptimeSend);
+    timer.setTimeout(8000L, uptimeSend);
   }
 }
 
@@ -83,27 +83,77 @@ void uptimeSend()  // Blinks a virtual LED in the Blynk app to show the ESP is l
   terminal.flush();
 }
 
-void fridgeDoorStatus()
+void doorOpenTimer()
 {
-  Serial.println(digitalRead(fridgeOpto));
-  Serial.println(digitalRead(freezeOpto));
+  if (timerLatch = 0)
+  {
+    startTime = millis();
+  }
+
+  timerLatch = 1;
+}
+
+void fridgeDoorStatus1()
+{
+  //Serial.println(digitalRead(fridgeOpto));
+  //Serial.println(digitalRead(freezeOpto));
 
   if (digitalRead(freezeOpto) == HIGH && digitalRead(fridgeOpto) == HIGH)
   {
     Blynk.virtualWrite(25, "<Open       Open>");
+    doorOpenTimer();
   }
   else if (digitalRead(freezeOpto) == LOW && digitalRead(fridgeOpto) == LOW)
   {
     Blynk.virtualWrite(25, "<Closed  Closed>");
+    timerLatch = 0;
+    startTime = millis();
   }
-    else if (digitalRead(freezeOpto) == HIGH && digitalRead(fridgeOpto) == LOW)
+  else if (digitalRead(freezeOpto) == HIGH && digitalRead(fridgeOpto) == LOW)
   {
     Blynk.virtualWrite(25, "<Open    Closed>");
+    doorOpenTimer();
   }
-    else if (digitalRead(freezeOpto) == LOW && digitalRead(fridgeOpto) == HIGH)
+  else if (digitalRead(freezeOpto) == LOW && digitalRead(fridgeOpto) == HIGH)
   {
     Blynk.virtualWrite(25, "<Closed    Open>");
+    doorOpenTimer();
   }
+
+  timer.setTimeout(2000L, fridgeDoorStatus2);
+
+}
+
+void fridgeDoorStatus2()
+{
+  //Serial.println(digitalRead(fridgeOpto));
+  //Serial.println(digitalRead(freezeOpto));
+
+  if (digitalRead(freezeOpto) == HIGH && digitalRead(fridgeOpto) == HIGH)
+  {
+    Blynk.virtualWrite(25, String("<          ") + currentTime + "s         >");
+    doorOpenTimer();
+  }
+  else if (digitalRead(freezeOpto) == LOW && digitalRead(fridgeOpto) == LOW)
+  {
+    Blynk.virtualWrite(25, "<Closed  Closed>");
+    timerLatch = 0;
+    startTime = millis();
+  }
+  else if (digitalRead(freezeOpto) == HIGH && digitalRead(fridgeOpto) == LOW)
+  {
+    Blynk.virtualWrite(25, String("<") + currentTime + "s       Closed>");
+    doorOpenTimer();
+  }
+  else if (digitalRead(freezeOpto) == LOW && digitalRead(fridgeOpto) == HIGH)
+  {
+    Blynk.virtualWrite(25, "<Closed    Open>");
+    Blynk.virtualWrite(25, String("<Closed       ") + currentTime + "s>");
+    doorOpenTimer();
+  }
+
+  timer.setTimeout(2000L, fridgeDoorStatus1);
+
 }
 
 void statusBlinkOn()
@@ -193,6 +243,25 @@ void loop()
     display.setCursor(0, 40);
     display.println(" Temps in Fahrenheit");
   }
+
+  if (digitalRead(freezeOpto) == HIGH || digitalRead(fridgeOpto) == HIGH)
+  {
+    currentTime = (millis() - startTime) / 1000;
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 56);
+    display.println(String("  DOOR OPEN ") + currentTime + " SEC");
+  }
+  /*
+  else
+  {
+    display.setTextSize(1);
+    display.setTextColor(BLACK);
+    display.setCursor(0, 56);
+    display.println(String("  DOOR OPEN ") + currentTime + " SEC");
+  }
+  */
+
   display.display();
 }
 
