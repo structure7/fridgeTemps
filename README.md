@@ -1,11 +1,10 @@
-# fridgeTemps (in development)
+# fridgeTemps
 
 What's more exciting than displaying your refrigerator and freezer temperature on a small OLED? Nothing.
 
 Sending temperatures with two DS18B20s using a WeMos D1 Mini. OLED is "I2C interface 0.96" OLED 128x64 display module" from eBay.
 
-![ScreenShot](http://http://i.imgur.com/zLafz0V.jpg)
-![ScreenShot](http://http://i.imgur.com/zLafz0V.jpg)
+<p align="center"><img src="http://i.imgur.com/zLafz0V.jpg"/></p>
 
 ## Libraries and Resources
 
@@ -22,7 +21,7 @@ Arduino-Temperature-Control-Library | DallasTemperature.h | https://github.com/m
 Many thanks to all of the people above. [How to edit this.](https://guides.github.com/features/mastering-markdown/)
 
 ## Lessons Learned
-###NodeMCU's ESP-12E versus the I2C OLED (w/ Arduino... no Lua)
+###NodeMCU's ESP-12E (or any 8266-based board) versus the I2C OLED (w/ Arduino... not Lua)
 <p align="center"><img src="http://i.imgur.com/jLLg0gr.jpg"/></p>
 I purchased a pretty plain OLED display (http://www.ebay.com/itm/130566448551) advertised as "I2C 0.96" OLED display module (compatible Arduino)" and further described as "I2C interface 0.96" OLED 128x64 display module." In the eBay listing there was a "source code" link and it mentioned it was tested and 100% compatible with Adafruit's code.
 
