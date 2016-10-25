@@ -2,9 +2,10 @@
 
 What's more exciting than displaying your refrigerator and freezer temperature on a small OLED? Nothing.
 
-Sending temperatures with two DS18B20s. On an NodeMCU (ESP-12E)... may downgrade to an ESP8266-01. OLED is "I2C interface 0.96" OLED 128x64 display module" from eBay.
+Sending temperatures with two DS18B20s using a WeMos D1 Mini. OLED is "I2C interface 0.96" OLED 128x64 display module" from eBay.
 
-![ScreenShot](http://i.imgur.com/JYmjOTz.jpg)
+![ScreenShot](http://http://i.imgur.com/zLafz0V.jpg)
+![ScreenShot](http://http://i.imgur.com/zLafz0V.jpg)
 
 ## Libraries and Resources
 
