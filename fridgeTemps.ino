@@ -19,10 +19,9 @@ char auth[] = "fromBlynkApp";
 char ssid[] = "ssid";
 char pass[] = "pw";
 
-// All sparkfun updates now handled by Blynk's WebHook widget
-//char* host = "data.sparkfun.com";
-//char* streamId   = "publicKey";
-//char* privateKey = "privateKey";
+char* hostSF = "raspi";
+char* streamId   = "publicKey";
+char* privateKey = "privateKey";
 
 SimpleTimer timer;
 WidgetRTC rtc;
@@ -280,14 +279,53 @@ void testdrawrect(void) {   // Draws a test pattern on the OLED display.
 }
 
 void sfWebhook() {
-  if (tempFreezer > -50 || tempFridge > -50)  // Screens out temp sensor errors.
+  if (tempFreezer > -50 && tempFridge > 0)  // Screens out temp sensor errors.
   {
-    Blynk.virtualWrite(37, String("tempfreezer=") + tempFreezer + "&tempfridge=" + tempFridge);
+    //Blynk.virtualWrite(37, String("tempfreezer=") + tempFreezer + "&tempfridge=" + tempFridge);
+    sfSend();
   }
   else
   {
     ++tempSensorErrorCount;
   }
+}
+
+void sfSend()
+{
+  Serial.print("connecting to ");
+  Serial.println(hostSF);
+
+  // Use WiFiClient class to create TCP connections
+  WiFiClient client;
+  const int httpPort = 8080;
+  if (!client.connect(hostSF, httpPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+
+  Serial.print("Requesting...");
+
+  // This will send the request to the server
+  client.print(String("GET ") + "/input/" + streamId + "?private_key=" + privateKey + "&tempfreezer=" + tempFreezer + "&tempfridge=" + tempFridge + " HTTP/1.1\r\n" +
+               "Host: " + hostSF + "\r\n" +
+               "Connection: close\r\n\r\n");
+  unsigned long timeout = millis();
+  while (client.available() == 0) {
+    if (millis() - timeout > 15000) {
+      Serial.println(">>> Client Timeout !");
+      client.stop();
+      return;
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  while (client.available()) {
+    String line = client.readStringUntil('\r');
+    Serial.print(line);
+  }
+
+  Serial.println();
+  Serial.println("closing connection");
 }
 
 BLYNK_WRITE(V27) // App button to report uptime
@@ -296,7 +334,7 @@ BLYNK_WRITE(V27) // App button to report uptime
 
   if (pinData == 0)
   {
-    timer.setTimeout(15000L, uptimeSend);
+    timer.setTimeout(18000L, uptimeSend);
   }
 }
 
