@@ -1,6 +1,5 @@
 #include <SimpleTimer.h>
 #define BLYNK_PRINT Serial
-#include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -25,7 +24,6 @@ char* privateKey = "privateKey";
 
 SimpleTimer timer;
 WidgetRTC rtc;
-BLYNK_ATTACH_WIDGET(rtc, V8);
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -44,20 +42,9 @@ DallasTemperature sensors(&oneWire);
 DeviceAddress ds18b20Freezer = { 0x28, 0x77, 0x8A, 0x1E, 0x00, 0x00, 0x80, 0xD4 }; // Freezer
 DeviceAddress ds18b20Fridge = { 0x28, 0xBE, 0x89, 0x1E, 0x00, 0x00, 0x80, 0x93 };  // Refridgerator
 
-int tempFridge, tempFreezer, timerLatch, startTime, currentTime;
+int tempFridge, tempFreezer;
 
 int vertAdj = 8;    // Changing this value higher moves everything on the display down.
-
-int dailyFridgeHigh = 0;
-int dailyFridgeLow = 100;
-int dailyFreezerHigh = -50;
-int dailyFreezerLow = 100;
-
-bool updateLabelFlag = 0;
-String currentTimeDate;        // Time formatted as "0:00AM on 0/0"
-String resetTimeDate;          // When hardware was reset.
-
-int tempSensorErrorCount = 0;
 
 void setup()
 {
@@ -78,7 +65,7 @@ void setup()
   display.clearDisplay();
 
   // START OTA ROUTINE
-  ArduinoOTA.setHostname("esp8266-Fridge");
+  ArduinoOTA.setHostname("Fridge-WeMosD1mini");
 
   ArduinoOTA.onStart([]() {
     Serial.println("Start");
@@ -113,73 +100,17 @@ void setup()
   rtc.begin();
 
   statusBlinkOn();
-  timer.setInterval(15432L, sfWebhook);            // ~15 sec run status updates to data.sparkfun.com.
-  timer.setInterval(2121L, tempSensorPolling);     // ~2 sec delay between sensor polling.
-  timer.setInterval(5432L, sendTemps);             // ~5 sec delay between temp data pushed to app display.
-  timer.setInterval(61221L, updateAppLabel);       // Update display property (app label).
-}
-
-void updateAppLabel()
-{
-  Blynk.setProperty(V40, "label", String("Hi/Lo temps since ") + resetTimeDate + ". " + tempSensorErrorCount + " errors.");
-}
-
-void tempSensorPolling()
-{
-  sensors.requestTemperatures();                   // Polls the sensors
-  tempFridge = sensors.getTempF(ds18b20Fridge);
-  tempFreezer = sensors.getTempF(ds18b20Freezer);
+  timer.setInterval(15432L, sfWebhook);            // ~15 sec run status updates to Phant.
+  timer.setInterval(4321L, sendTemps);             // ~4 sec delay between temp data pushed to app display.
 }
 
 void sendTemps()
 {
+  sensors.requestTemperatures();                   // Polls the sensors
+  tempFridge = sensors.getTempF(ds18b20Fridge);
+  tempFreezer = sensors.getTempF(ds18b20Freezer);
   Blynk.virtualWrite(36, tempFreezer);
   Blynk.virtualWrite(35, tempFridge);
-
-  if (tempFridge > dailyFridgeHigh)
-  {
-    dailyFridgeHigh = tempFridge;
-  }
-
-  if (tempFridge < dailyFridgeLow && tempFridge > -50)
-  {
-    dailyFridgeLow = tempFridge;
-  }
-
-  if (tempFreezer > dailyFreezerHigh)
-  {
-    dailyFreezerHigh = tempFreezer;
-  }
-
-  if (tempFreezer < dailyFreezerLow && tempFreezer > -50)
-  {
-    dailyFreezerLow = tempFreezer;
-  }
-
-  if (year() != 1970) // Doesn't start until RTC is set correctly.
-  {
-    // Below gives me leading zeros on minutes and AM/PM.
-    if (minute() > 9 && hour() > 11) {
-      currentTimeDate = String(hourFormat12()) + ":" + minute() + "PM on " + month() + "/" + day();
-    }
-    else if (minute() < 10 && hour() > 11) {
-      currentTimeDate = String(hourFormat12()) + ":0" + minute() + "PM on " + month() + "/" + day();
-    }
-    else if (minute() > 9 && hour() < 12) {
-      currentTimeDate = String(hourFormat12()) + ":" + minute() + "AM on " + month() + "/" + day();
-    }
-    else if (minute() < 10 && hour() < 12) {
-      currentTimeDate = String(hourFormat12()) + ":0" + minute() + "AM on " + month() + "/" + day();
-    }
-  }
-
-  if (updateLabelFlag == 0 && year() != 1970)
-  {
-    resetTimeDate = currentTimeDate;
-    updateLabelFlag = 1;
-  }
-
-  Blynk.virtualWrite(40, String("Freezer: ") + dailyFreezerHigh + "/" + dailyFreezerLow + "    Fridge: " + dailyFridgeHigh + "/" + dailyFridgeLow);
 }
 
 void statusBlinkOn()
@@ -279,14 +210,9 @@ void testdrawrect(void) {   // Draws a test pattern on the OLED display.
 }
 
 void sfWebhook() {
-  if (tempFreezer > -50 && tempFridge > 0)  // Screens out temp sensor errors.
+  if (tempFreezer > -100 && tempFridge > -100)  // Screens out temp sensor errors.
   {
-    //Blynk.virtualWrite(37, String("tempfreezer=") + tempFreezer + "&tempfridge=" + tempFridge);
     sfSend();
-  }
-  else
-  {
-    ++tempSensorErrorCount;
   }
 }
 
